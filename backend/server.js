@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const passport = require('passport');
-require('./config'); // Loads your configuration settings
+require('./config'); // Load configuration settings
 
 // Import routes
 const authRoutes = require('./routes/auth');
