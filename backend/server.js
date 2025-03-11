@@ -4,6 +4,7 @@ const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 require('./config');
 
 const authRoutes = require('./routes/auth');
@@ -15,8 +16,8 @@ const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware setup
+app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -26,7 +27,7 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-// Initialize Passport
+// Initialize Passport for Discord authentication
 app.use(passport.initialize());
 app.use(passport.session());
 require('./controllers/authController').initPassport(passport);
@@ -38,7 +39,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/deviantloun
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Routes
+// Define routes
 app.use('/auth', authRoutes);
 app.use('/currency', currencyRoutes);
 app.use('/games', gamesRoutes);
@@ -50,4 +51,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
